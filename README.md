@@ -1,3 +1,8 @@
+I've implemented the challenge in Python, the project setup and dependency management is done with [poetry](https://python-poetry.org/) and I've added a `.python-version` file which works with the [pyenv](https://github.com/pyenv/pyenv) utility to automatically set the `python` version to use when available.
+
+
+# Requirements
+
 Lana has come to conclusion that users are very likely to buy awesome Lana merchandising from a physical store that sells the following 3 products:
 
 ```
