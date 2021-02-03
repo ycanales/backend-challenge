@@ -19,14 +19,21 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 db = SQLAlchemy(app)
 
 # Models
+products = db.Table('products',
+db.Column('basket_id', db.Integer, db.ForeignKey('basket.id'), primary_key=True),
+db.Column('product_id', db.Integer, db.ForeignKey('product.id'))
+)
+
 class Basket(db.Model, SerializerMixin):
 	id = db.Column(db.Integer, primary_key=True)
+	products = db.relationship('Product', secondary=products, lazy='subquery', backref=db.backref('baskets', lazy=True))
 
 class Product(db.Model, SerializerMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	code = db.Column(db.String, unique=True, nullable=False)
 	name = db.Column(db.String, nullable=False)
 	price = db.Column(db.Integer)
+	
 	
 # Create database tables
 db.create_all()
