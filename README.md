@@ -1,7 +1,33 @@
+# Challenge Solution
+
 I've implemented the challenge in Python, the project setup and dependency management is done with [poetry](https://python-poetry.org/) and I've added a `.python-version` file which works with the [pyenv](https://github.com/pyenv/pyenv) utility to automatically set the `python` version to use when available.
 
+## Requirements Summary Table
 
-# Requirements
+Bonus
+-----------
+Tests | ✅
+--------------------
+Money as integers | ✅
+-----------------------
+
+## Libraries Used
+
+- [flask](https://flask.palletsprojects.com/en/1.1.x/) Flask is a micro framework for developing web apps in Python. Being micro means that you can start your application with a simple core and then add features as you like, using the python libraries that you choose, opposed to a batteries-included approach like the one followed by Django. 
+
+## Will this scale to production?
+
+I chose Flask it because it's a great fit for a small proof-of-concept application but that doesn't mean it can't grow into a proper production-grade application. I see two ways in which that transition can be achieved:
+
+- Migrate the business logic to Django and make use of all the great features that come in included in the framework like the ORM, admin interface, forms validation, Class Based Views, authentication and security features, database migrations and lots of other goodies.
+- Keep Flask and add libraries as needed. This would be more work but might be better to keep a tight control on every design decision if it provides a considerable benefit in performance, features or developer experience.
+
+## Database integration
+
+I've chosen [SQLAlchemy](https://www.sqlalchemy.org) as an ORM (Object Relational Mapper) and SQL toolkit for this project. Flask offers integration to it via the [Flask-SQLAlchemy](https://github.com/pallets/flask-sqlalchemy) extension.
+
+
+## Requirements
 
 Lana has come to conclusion that users are very likely to buy awesome Lana merchandising from a physical store that sells the following 3 products:
 
