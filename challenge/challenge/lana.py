@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_serializer import SerializerMixin
 
 PRODUCTS = [
 	{'code': 'PEN', 'name': 'Lana Pen', 'price': 500},
@@ -18,10 +19,10 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 db = SQLAlchemy(app)
 
 # Models
-class Basket(db.Model):
+class Basket(db.Model, SerializerMixin):
 	id = db.Column(db.Integer, primary_key=True)
 
-class Product(db.Model):
+class Product(db.Model, SerializerMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	code = db.Column(db.String, unique=True, nullable=False)
 	name = db.Column(db.String, nullable=False)
@@ -39,3 +40,7 @@ def create_basket():
 	db.session.add(basket)
 	db.session.commit()
 	return {'basket_id': basket.id}
+	
+@app.route('/products/', methods=['GET'])
+def get_products():
+	return {'products': [p.to_dict() for p in Product.query.all()]}
