@@ -1,11 +1,23 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+PRODUCTS = [
+	{'code': 'PEN', 'name': 'Lana Pen', 'price': 500},
+	{'code': 'TSHIRT', 'name': 'Lana T-Shirt', 'price': 2000},
+	{'code': 'MUG', 'name': 'Lana Coffee Mug', 'price': 750},
+]
 
+def create_products():
+	for p in PRODUCTS:
+		db.session.add(Product(code=p['code'], name=p['name'], price=p['price']))
+	db.session.commit()
+
+# Initialize app using an in-memory SQLite database.
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 db = SQLAlchemy(app)
 
+# Models
 class Basket(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 
@@ -15,8 +27,11 @@ class Product(db.Model):
 	name = db.Column(db.String, nullable=False)
 	price = db.Column(db.Integer)
 	
+# Create database tables
 db.create_all()
 db.session.commit()
+
+create_products()
 
 @app.route('/baskets/', methods=['POST'])
 def create_basket():
