@@ -6,6 +6,8 @@ authors = ["Cristian Yanez <cristian.yanez.canales@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+Flask = "^1.1.2"
+Flask-SQLAlchemy = "^2.4.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
