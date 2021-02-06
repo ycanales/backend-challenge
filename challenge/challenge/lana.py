@@ -23,9 +23,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 db = SQLAlchemy(app)
 
 # Models
-
-
-
 class Basket(db.Model, SerializerMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	basket_products = db.relationship("BasketProduct", backref="basket")
@@ -37,6 +34,8 @@ class BasketProduct(db.Model, SerializerMixin):
 	
 	product = db.relationship("Product")
 	
+	# Exclude those fields when serializing, for a lighter representation and
+	# to avoid recursion issues as there are circular references between models.
 	serialize_rules = ('-basket', '-basket_id', '-product.baskets', '-product_id')
 
 class Product(db.Model, SerializerMixin):
@@ -46,6 +45,9 @@ class Product(db.Model, SerializerMixin):
 	price = db.Column(db.Numeric(10, 2)) # 10 digits, 2 of them are decimals.
 	
 	baskets = db.relationship('Basket', secondary=BasketProduct.__table__, lazy="select", viewonly=True)
+	
+	# Exclude baskets from serialization.
+	serialize_rules = ('-baskets',)
 	
 	
 # Create database tables
