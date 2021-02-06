@@ -17,9 +17,12 @@ Money as integers | ✅
 
 ## Will this scale to production?
 
-I chose Flask it because it's a great fit for a small proof-of-concept application but that doesn't mean it can't grow into a proper production-grade application. I see two ways in which that transition can be achieved:
+I chose Flask it because it's a great fit for a small proof-of-concept application but that doesn't mean it can't grow into a proper production-grade application. I see at least three ways in which that transition can be achieved:
 
 - Migrate the business logic to Django and make use of all the great features that come in included in the framework like the ORM, admin interface, forms validation, Class Based Views, authentication and security features, database migrations and lots of other goodies.
+
+- Migrate the business logic to FastAPI, which is a modern and fast framework for building APIs. It relies on standard Python hints (3.6+ required) to provide validation and serialization.
+
 - Keep Flask and add libraries as needed. This would be more work but might be better to keep a tight control on every design decision if it provides a considerable benefit in performance, features or developer experience.
 
 ## Database integration
