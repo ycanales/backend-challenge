@@ -64,6 +64,13 @@ def create_basket():
 	db.session.commit()
 	return {'basket_id': basket.id}
 	
+@app.route('/baskets/<int:basket_id>', methods=['GET'])
+def get_basket(basket_id):
+	basket = Basket.query.get(basket_id)
+	if not basket:
+		return make_response(jsonify('Basket not found'), 404)
+	return basket.to_dict()
+	
 # It's a bit ugly passing everything in the URL but I wanted to make it simpler. 
 # In production I would pass the product and quantity as a JSON payload in the body.
 @app.route('/baskets/<int:basket_id>/<int:product_id>/<int:quantity>', methods=['POST'])
