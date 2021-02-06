@@ -11,6 +11,14 @@ Tests | ✅
 Money as integers | ✅
 -----------------------
 
+## How to run
+
+### Manually
+0. `cd` into `challenge` directory.
+1. Install dependencies with poetry.
+2. Activate virtual environment shell with `poetry shell`
+3. Enter `FLASK_APP=challenge/lana.py FLASK_ENV=development python -m flask run`
+
 ## Libraries Used
 
 - [flask](https://flask.palletsprojects.com/en/1.1.x/) Flask is a micro framework for developing web apps in Python. Being micro means that you can start your application with a simple core and then add features as you like, using the python libraries that you choose, opposed to a batteries-included approach like the one followed by Django. 
