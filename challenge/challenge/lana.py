@@ -1,11 +1,13 @@
 from flask import Flask, make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 from sqlalchemy_serializer import SerializerMixin
 
+# Prices are handled with NUMERIC field in database with two decimals defined.
 PRODUCTS = [
-	{'code': 'PEN', 'name': 'Lana Pen', 'price': 500},
-	{'code': 'TSHIRT', 'name': 'Lana T-Shirt', 'price': 2000},
-	{'code': 'MUG', 'name': 'Lana Coffee Mug', 'price': 750},
+	{'code': 'PEN', 'name': 'Lana Pen', 'price': '5.00'},
+	{'code': 'TSHIRT', 'name': 'Lana T-Shirt', 'price': '20.00'},
+	{'code': 'MUG', 'name': 'Lana Coffee Mug', 'price': '7.50'},
 ]
 
 def create_basket():
@@ -27,6 +29,17 @@ class Basket(db.Model, SerializerMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	basket_products = db.relationship("BasketProduct", backref="basket")
 	
+	# Ideally this would be done as a AVG function in SQL, but this will do for now
+	# as we can assume a small number of products resulting in a negligible performance
+	# penalty.
+	def total(self):
+		total = 0
+		for bp in self.basket_products:
+			total += bp.product.price * bp.quantity
+		return f'{total}€'
+		
+	serialize_rules = ('total',)
+	
 class BasketProduct(db.Model, SerializerMixin):
 	basket_id = db.Column(db.Integer, db.ForeignKey('basket.id'), primary_key=True)
 	product_id = db.Column(db.Integer, db.ForeignKey('product.id'), primary_key=True)
@@ -37,6 +50,9 @@ class BasketProduct(db.Model, SerializerMixin):
 	# Exclude those fields when serializing, for a lighter representation and
 	# to avoid recursion issues as there are circular references between models.
 	serialize_rules = ('-basket', '-basket_id', '-product.baskets', '-product_id')
+	
+	def __repr__(self):
+		return f"<BasketProduct basket: {self.basket_id} product: {self.product_id}>"
 
 class Product(db.Model, SerializerMixin):
 	id = db.Column(db.Integer, primary_key=True)
@@ -47,7 +63,10 @@ class Product(db.Model, SerializerMixin):
 	baskets = db.relationship('Basket', secondary=BasketProduct.__table__, lazy="select", viewonly=True)
 	
 	# Exclude baskets from serialization.
-	serialize_rules = ('-baskets',)
+	serialize_rules = ('-baskets', 'price_human')
+	
+	def price_human(self):
+		return f"{self.price}€"
 	
 	
 # Create database tables
